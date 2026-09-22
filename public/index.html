@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111">
+<title>NONNA PIZZAS</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-overlay">
+    <div class="brand-mark">NONNA</div><h1>PIZZAS</h1>
+    <p id="statusLine" class="status-line">Consultando atención...</p>
+    <p id="scheduleLine" class="schedule-line"></p>
+    <a id="mapsLink" class="info-link" target="_blank" rel="noopener">📍 Ver ubicación del local</a>
+    <a id="phoneLink" class="info-link"></a>
+    <a id="instagramLink" class="info-link" target="_blank" rel="noopener"></a>
+    <a class="hero-btn" href="#menu">Ver menú</a>
+  </div>
+</header>
+
+<main>
+<section class="intro"><span class="eyebrow">PEDIDOS ONLINE</span><h2>Elegí lo que querés disfrutar</h2><p>Armá tu pedido y envialo directamente por WhatsApp.</p></section>
+<nav class="category-tabs" id="tabs">
+  <button class="tab active" data-category="pizzas">🍕 Pizzas</button>
+  <button class="tab" data-category="especiales">⭐ Especiales</button>
+  <button class="tab" data-category="bebidas">🥤 Bebidas</button>
+  <button class="tab" data-category="tragos">🍹 Tragos</button>
+  <button class="tab" data-category="prepizzas">🥖 Prepizzas</button>
+</nav>
+<section id="menu" class="menu-grid"></section>
+</main>
+
+<div id="cartBar" class="cart-bar hidden"><div><span id="cartCount">0 productos</span><strong id="cartTotal">$0</strong></div><button id="openCart">Ver pedido 🛒</button></div>
+
+<div id="productModal" class="modal hidden"><div class="modal-card"><button class="close" data-close="productModal">×</button><div id="productContent"></div></div></div>
+<div id="halfModal" class="modal hidden"><div class="modal-card"><button class="close" data-close="halfModal">×</button>
+<h2>🍕 Armá tu pizza mitad y mitad</h2><p>Elegí dos sabores para una pizza entera.</p>
+<div class="half-grid"><label>Mitad 1<select id="half1"></select></label><label>Mitad 2<select id="half2"></select></label></div>
+<div class="option-group"><h3>Preparación</h3><label class="option"><input type="radio" name="halfPrep" value="prelista" checked> ❄️ Prelista / sin asar</label><label class="option"><input type="radio" name="halfPrep" value="asada"> 🔥 Asada (+$<span id="halfCooked"></span>)</label></div>
+<div class="option-group"><h3>Borde</h3><label class="option"><input type="radio" name="halfEdge" value="normal" checked> Tradicional</label><label class="option"><input type="radio" name="halfEdge" value="relleno"> Relleno (+$<span id="halfEdge"></span>)</label></div>
+<div class="summary"><div><span>Total</span><strong id="halfTotal">$0</strong></div></div>
+<button class="primary" id="addHalf">Agregar al pedido</button>
+</div></div>
+
+<div id="cartModal" class="modal hidden"><div class="modal-card cart-card"><button class="close" data-close="cartModal">×</button><h2>🛒 Tu pedido</h2><div id="cartItems"></div>
+<div class="summary"><div><span>Subtotal</span><strong id="summarySubtotal">$0</strong></div><div><span>Envío</span><strong id="summaryDelivery">$0</strong></div><div class="grand-total"><span>TOTAL</span><strong id="summaryTotal">$0</strong></div></div>
+<form id="orderForm"><h3>Datos del pedido</h3>
+<label>Nombre<input name="name" required placeholder="Tu nombre"></label>
+<label>Teléfono<input name="phone" required placeholder="Tu teléfono"></label>
+<div class="choice-grid"><label class="choice"><input type="radio" name="fulfillment" value="Retiro en local" checked>🏠 Retiro<br><small>Sin costo</small></label><label class="choice"><input type="radio" name="fulfillment" value="Delivery">🛵 Delivery<br><small id="deliveryPriceLabel">+$3.000</small></label></div>
+<div id="deliveryFields" class="delivery-fields hidden"><label>Dirección<input name="address" placeholder="Calle y número"></label><label>Barrio<input name="neighborhood" placeholder="Barrio"></label><label>Referencia<input name="reference" placeholder="Referencia"></label><button type="button" class="gps-btn" id="gpsBtn">📍 Usar mi ubicación GPS</button><p id="gpsStatus" class="gps-status"></p><input type="hidden" name="latitude"><input type="hidden" name="longitude"></div>
+<label>Forma de pago<select name="payment"><option>Efectivo</option><option>Transferencia</option><option>Mercado Pago</option></select></label>
+<label>Observaciones<textarea name="notes" rows="3" placeholder="Sin cebolla, tocar timbre, etc."></textarea></label>
+<button class="whatsapp-btn" type="submit">Enviar pedido por WhatsApp 📲</button></form></div></div>
+
+<footer><strong>NONNA PIZZAS</strong><p>Pedidos por WhatsApp · Delivery / Retiro en local</p></footer>
+<script src="/app.js"></script>
+</body></html>

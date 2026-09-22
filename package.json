@@ -1,0 +1,18 @@
+{
+  "name": "nonna-pizzas-profesional",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Sistema profesional de pedidos online para NONNA PIZZAS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "multer": "^2.0.0",
+    "sqlite-sync": "^0.3.9",
+    "sqlite3": "^6.0.1"
+  }
+}
