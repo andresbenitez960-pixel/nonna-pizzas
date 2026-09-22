@@ -369,6 +369,23 @@ app.use(
 
 app.use(express.static(path.join(ROOT, "public")));
 
+app.set("trust proxy", 1);
+
+app.use(
+  session({
+    secret:
+      process.env.SESSION_SECRET ||
+      "nonna-session-secret-change-me",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 8 * 60 * 60 * 1000
+    }
+  })
+);
 async function setting(key) {
   const result = usePostgres
     ? await db.query(
