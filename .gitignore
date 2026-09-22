@@ -6,3 +6,4 @@ node_modules/
 .DS_Store
 Thumbs.db
 nonna.db
+server_sqlite_backup.js
