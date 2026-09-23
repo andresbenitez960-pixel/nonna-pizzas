@@ -3,7 +3,7 @@ const session = require("express-session");
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
-
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -11,6 +11,20 @@ const ADMIN_USER = process.env.ADMIN_USER || "admin";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "cambiar-esta-clave";
 
 const ROOT = __dirname;
+const R2_ENDPOINT = process.env.R2_ENDPOINT;
+const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID;
+const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY;
+const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME;
+const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;
+
+const r2 = new S3Client({
+  region: "auto",
+  endpoint: R2_ENDPOINT,
+  credentials: {
+    accessKeyId: R2_ACCESS_KEY_ID,
+    secretAccessKey: R2_SECRET_ACCESS_KEY
+  }
+});
 const UPLOAD_DIR = path.join(ROOT, "public", "uploads");
 
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
@@ -777,27 +791,7 @@ app.delete("/api/admin/products/:id", adminOnly, async (req, res) => {
    SUBIDA DE IMÁGENES
 ========================= */
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, UPLOAD_DIR);
-  },
-
-  filename: (req, file, cb) => {
-    const ext = path
-      .extname(file.originalname)
-      .toLowerCase();
-
-    const safe =
-      Date.now() +
-      "-" +
-      Math.random()
-        .toString(36)
-        .slice(2, 8) +
-      ext;
-
-    cb(null, safe);
-  }
-});
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
@@ -827,17 +821,42 @@ app.post(
   "/api/admin/upload",
   adminOnly,
   upload.single("image"),
-  (req, res) => {
-    if (!req.file) {
-      return res.status(400).json({
-        error: "No se recibió imagen"
-      });
-    }
+  async (req, res, next) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          error: "No se recibió imagen"
+        });
+      }
 
-    res.json({
-      ok: true,
-      url: "/uploads/" + req.file.filename
-    });
+      const ext = path
+        .extname(req.file.originalname)
+        .toLowerCase();
+
+      const safe =
+        Date.now() +
+        "-" +
+        Math.random()
+          .toString(36)
+          .slice(2, 8) +
+        ext;
+
+      await r2.send(
+        new PutObjectCommand({
+          Bucket: R2_BUCKET_NAME,
+          Key: safe,
+          Body: req.file.buffer,
+          ContentType: req.file.mimetype
+        })
+      );
+
+      res.json({
+        ok: true,
+        url: `${R2_PUBLIC_URL}/${safe}`
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 );
 
